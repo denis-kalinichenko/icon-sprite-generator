@@ -1,0 +1,6 @@
+{
+    "extends": [
+        "g2a",
+        "node-g2a"
+    ]
+}

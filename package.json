@@ -1,0 +1,29 @@
+{
+  "name": "icon-sprite-generator",
+  "version": "0.1.0",
+  "description": "Icon Sprite Generator",
+  "main": "src/generator.js",
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^4.6.1",
+    "eslint-config-g2a": "^1.0.1",
+    "eslint-config-node-g2a": "^1.0.1",
+    "mocha": "^3.5.0"
+  },
+  "scripts": {
+    "test": "mocha",
+    "lint": "eslint ./src",
+    "lint:fix": "npm run lint -- --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@code.g2a.com:7999/uix/icon-sprite-generator.git"
+  },
+  "keywords": [
+    "icons",
+    "sprite"
+  ],
+  "author": "Denis Kalinichenko <d.kalinichenkooo@gmail.com>",
+  "license": "UNLICENSED"
+}
