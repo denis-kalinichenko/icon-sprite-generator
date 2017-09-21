@@ -1,3 +1,5 @@
+const cheerio = require('cheerio');
+
 /**
  * Cleans the SVG string from unnecessary tags and attributes.
  *
@@ -5,9 +7,14 @@
  * @return {string} file - The SVG content string after cleaning.
  */
 module.exports = function cleaner(svgString) {
-    var file = svgString;
-    file = file.replace("&gt;", ">");
-    file = file.replace(/ (style|class|id|fill)="[^"]*"/g, "");
-    file = file.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "");
-    return file;
+    const xml = cheerio.load(svgString, {
+        ignoreWhitespace: true,
+        xmlMode: true,
+    });
+    xml("style").remove();
+    xml("[style]").removeAttr("style");
+    xml("[class]").removeAttr("class");
+    xml("[id]").removeAttr("id");
+    xml("[fill]").removeAttr("fill");
+    return xml.html();
 };

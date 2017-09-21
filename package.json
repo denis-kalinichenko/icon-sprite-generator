@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "description": "Icon Sprite Generator",
   "main": "src/generator.js",
-  "dependencies": {},
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2"
+  },
   "devDependencies": {
     "chai": "^4.1.2",
     "eslint": "^4.6.1",
