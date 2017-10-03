@@ -1,4 +1,4 @@
-const cheerio = require('cheerio');
+const cheerio = require("cheerio");
 
 /**
  * Cleans the SVG string from unnecessary tags and attributes.

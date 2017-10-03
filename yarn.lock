@@ -320,6 +320,10 @@ escape-string-regexp@1.0.5, escape-string-regexp@^1.0.2, escape-string-regexp@^1
   version "1.0.5"
   resolved "http://npm.code.g2a.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
 
+eslint-config-es6-g2a@^1.0.2:
+  version "1.0.2"
+  resolved "http://npm.code.g2a.com/eslint-config-es6-g2a/-/eslint-config-es6-g2a-1.0.2.tgz#826f1cd21089d439190a1906bba88c278eef69ae"
+
 eslint-config-g2a@^1.0.1:
   version "1.0.1"
   resolved "http://npm.code.g2a.com/eslint-config-g2a/-/eslint-config-g2a-1.0.1.tgz#f95c99f4b4bbe82b78545cb21f7466beda1ac862"

@@ -39,5 +39,10 @@ describe('Icon Sprite Generator', function() {
             expectedSVG = "<svg><path/></svg>";
             expect(cleaner(svg)).to.equal(expectedSVG);
         });
+
+        it("doesn't remove necessary attributes", function() {
+            const svg = '<svg><symbol viewBox="0 0 24 24"/><path d="point"/></svg>';
+            expect(cleaner(svg)).to.equal(svg);
+        });
     });
 });
