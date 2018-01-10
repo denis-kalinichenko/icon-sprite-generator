@@ -50,8 +50,8 @@ describe('Icon Sprite Generator', function () {
         });
 
         it("removes any 'style', 'class', 'id' and 'fill' attributes", () => {
-            var svg = '<svg><g style="fill: red;"></g></svg>';
-            var expectedSVG = "<svg><g/></svg>";
+            let svg = '<svg><g style="fill: red;"></g></svg>';
+            let expectedSVG = "<svg><g/></svg>";
             expect(cleaner(svg)).to.equal(expectedSVG);
 
             svg = '<svg><path fill="red"></path></svg>';
@@ -72,8 +72,8 @@ describe('Icon Sprite Generator', function () {
         });
 
         it("removes any <style/> tags", () => {
-            var svg = '<svg><style>.cl03 { fill: red; }</style><path></path></svg>';
-            var expectedSVG = "<svg><path/></svg>";
+            let svg = '<svg><style>.cl03 { fill: red; }</style><path></path></svg>';
+            let expectedSVG = "<svg><path/></svg>";
             expect(cleaner(svg)).to.equal(expectedSVG);
 
             svg = '<svg><style>.cl03 { fill: red; }</style><path><style>.cl03 { fill: red; }</style></path></svg>';
