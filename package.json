@@ -4,7 +4,9 @@
   "description": "Icon Sprite Generator",
   "main": "src/generator.js",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.2"
+    "@uix/icons": "^1.0.5",
+    "cheerio": "^1.0.0-rc.2",
+    "globby": "^7.1.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",
@@ -12,7 +14,8 @@
     "eslint-config-es6-g2a": "^1.0.2",
     "eslint-config-g2a": "^1.0.1",
     "eslint-config-node-g2a": "^1.0.1",
-    "mocha": "^3.5.0"
+    "mocha": "^4.1.0",
+    "rewire": "^3.0.2"
   },
   "scripts": {
     "test": "mocha",
