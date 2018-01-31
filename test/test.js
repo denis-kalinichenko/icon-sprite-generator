@@ -112,7 +112,7 @@ describe('Icon Sprite Generator', function () {
 
         it("returns array of processed files as Vinyl objects", done => {
             processFiles(filesMock).then(result => {
-                expect(result).to.be.have.length(3);
+                expect(result).to.have.length(3);
                 expect(Vinyl.isVinyl(result[0])).to.be.equal(true);
                 expect(Vinyl.isVinyl(result[1])).to.be.equal(true);
                 expect(Vinyl.isVinyl(result[2])).to.be.equal(true);

@@ -5,9 +5,7 @@ module.exports = new SVGSpriter({
     dest: "",
     shape: {
         id: {
-            generator: name => {
-                return "icon-" + path.basename(name, '.svg');
-            },
+            generator: name => "icon-" + path.basename(name, '.svg'),
         },
         dimension: {
             attributes: false,
