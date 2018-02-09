@@ -3,6 +3,7 @@ const spies = require("chai-spies");
 const chaiAsPromised = require("chai-as-promised");
 const rewire = require("rewire");
 const Vinyl = require("vinyl");
+const path = require("path");
 
 chai.use(chaiAsPromised);
 chai.use(spies);
@@ -14,6 +15,7 @@ const matchFiles = rewire("./../src/components/matchFiles");
 const processFiles = require("./../src/components/processFiles");
 const cleaner = require("./../src/components/cleaner");
 const compileSprite = require("./../src/components/spriterCompiler");
+const writeOnDisk = rewire("./../src/components/writeOnDisk");
 
 const globMock = require("./mock/globMock");
 
@@ -43,9 +45,16 @@ describe("Icon Sprite Generator", function () {
             });
         };
 
+        const writeOnDiskMock = (sprite, output) => {
+            return new Promise(resolve => {
+                resolve(sprite);
+            });
+        };
+
         const matchFilesSpy = spy(matchFilesMock);
         const processFilesSpy = spy(processFilesMock);
         const compileSpriteSpy = spy(compileSpriteMock);
+        const writeOnDiskSpy = spy(writeOnDiskMock);
         const spriterAddSpy = spy();
 
         const spriterMock = () => {
@@ -57,13 +66,15 @@ describe("Icon Sprite Generator", function () {
         const revertMatchFiles = generator.__set__("matchFiles", matchFilesSpy);
         const revertProcessFiles = generator.__set__("processFiles", processFilesSpy);
         const revertCompileSprite = generator.__set__("compileSprite", compileSpriteSpy);
+        const revertWriteOnDisk = generator.__set__("writeOnDisk", writeOnDiskSpy);
         const revertSpriter = generator.__set__("SVGSpriter", spriterMock);
 
-        generator("path/to/**.svg").then(result => {
+        generator("path/to/**.svg", "path/to/output.svg").then(result => {
             expect(matchFilesSpy).to.have.been.called.once.with.exactly("path/to/**.svg");
             expect(processFilesSpy).to.have.been.called.once.with.exactly(filesMock);
             expect(spriterAddSpy).to.have.been.called(3);
             expect(compileSpriteSpy).to.have.been.called(1);
+            expect(writeOnDiskSpy).to.have.been.called.once.with.exactly("<svg></svg>", "path/to/output.svg");
             expect(result).to.equal("<svg></svg>");
 
             done();
@@ -75,6 +86,7 @@ describe("Icon Sprite Generator", function () {
             revertProcessFiles();
             revertSpriter();
             revertCompileSprite();
+            revertWriteOnDisk();
         });
     });
 
@@ -190,6 +202,31 @@ describe("Icon Sprite Generator", function () {
                 done();
             }).catch(error => {
                 done(error);
+            });
+        });
+    });
+
+    describe("writeOnDisk", () => {
+        it("writes sprite on disk", done => {
+            const fsMock = {
+                writeFile: (p1, p2, p3, callback) => {
+                    expect(p1).to.equal(path.resolve("path/to/output.svg"));
+                    expect(p2).to.equal(`<svg></svg>`);
+                    expect(p3).to.equal("utf8");
+                    callback(null);
+                },
+            };
+
+            const revertFs = writeOnDisk.__set__("fs", fsMock);
+
+            writeOnDisk(`<svg></svg>`, "path/to/output.svg").then(result => {
+                expect(result).to.equal(`<svg></svg>`);
+                done();
+            }).catch(error => {
+                done(error);
+            })
+            .then(() => {
+                revertFs();
             });
         });
     });

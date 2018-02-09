@@ -4,8 +4,9 @@ const matchFiles = require("./components/matchFiles");
 const processFiles = require("./components/processFiles");
 const SVGSpriter = require("./components/spriter");
 const compileSprite = require("./components/spriterCompiler");
+const writeOnDisk = require("./components/writeOnDisk");
 
-module.exports = function iconSpriteGenerator(input = path) {
+module.exports = function iconSpriteGenerator(input = path, output = null) {
     return matchFiles(input)
         .then(processFiles)
         .then(collection => {
@@ -15,5 +16,6 @@ module.exports = function iconSpriteGenerator(input = path) {
             });
             return spriter;
         })
-        .then(compileSprite);
+        .then(compileSprite)
+        .then(sprite => writeOnDisk(sprite, output));
 };
