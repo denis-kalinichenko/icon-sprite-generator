@@ -1,5 +1,5 @@
 const {expect} = chai = require("chai");
-const spies = require('chai-spies');
+const spies = require("chai-spies");
 const chaiAsPromised = require("chai-as-promised");
 const rewire = require("rewire");
 const Vinyl = require("vinyl");
@@ -17,12 +17,12 @@ const compileSprite = require("./../src/components/spriterCompiler");
 
 const globMock = require("./mock/globMock");
 
-describe('Icon Sprite Generator', function () {
+describe("Icon Sprite Generator", function () {
     it("returns a SVG sprite as string", done => {
         const filesMock = [
-            '/Users/g2a/PhpstormProjects/icon-sprite-generator/node_modules/@uix/icons/src/action/cart_check.svg',
-            '/Users/g2a/PhpstormProjects/icon-sprite-generator/node_modules/@uix/icons/src/action/cart.svg',
-            '/Users/g2a/PhpstormProjects/icon-sprite-generator/node_modules/@uix/icons/src/action/contact.svg',
+            "/Users/g2a/PhpstormProjects/icon-sprite-generator/node_modules/@uix/icons/src/action/cart_check.svg",
+            "/Users/g2a/PhpstormProjects/icon-sprite-generator/node_modules/@uix/icons/src/action/cart.svg",
+            "/Users/g2a/PhpstormProjects/icon-sprite-generator/node_modules/@uix/icons/src/action/contact.svg",
         ];
 
         const matchFilesMock = () => {
@@ -100,9 +100,9 @@ describe('Icon Sprite Generator', function () {
 
     describe("processFiles", () => {
         const filesMock = [
-            __dirname + '/icons/action_bin.svg',
-            __dirname + '/icons/action_cart.svg',
-            __dirname + '/icons/action_login.svg',
+            __dirname + "/icons/action_bin.svg",
+            __dirname + "/icons/action_cart.svg",
+            __dirname + "/icons/action_login.svg",
         ];
 
         it("rejects promise if no files provided", done => {
