@@ -48,20 +48,22 @@ describe('Icon Sprite Generator', function () {
         const compileSpriteSpy = spy(compileSpriteMock);
         const spriterAddSpy = spy();
 
-        const spriterMock = {
-            add: spriterAddSpy,
+        const spriterMock = () => {
+            return {
+                add: spriterAddSpy,
+            };
         };
 
         const revertMatchFiles = generator.__set__("matchFiles", matchFilesSpy);
         const revertProcessFiles = generator.__set__("processFiles", processFilesSpy);
         const revertCompileSprite = generator.__set__("compileSprite", compileSpriteSpy);
-        const revertSpriter = generator.__set__("spriter", spriterMock);
+        const revertSpriter = generator.__set__("SVGSpriter", spriterMock);
 
         generator("path/to/**.svg").then(result => {
             expect(matchFilesSpy).to.have.been.called.once.with.exactly("path/to/**.svg");
             expect(processFilesSpy).to.have.been.called.once.with.exactly(filesMock);
             expect(spriterAddSpy).to.have.been.called(3);
-            expect(compileSpriteSpy).to.have.been.called.once.with.exactly(spriterMock);
+            expect(compileSpriteSpy).to.have.been.called(1);
             expect(result).to.equal("<svg></svg>");
 
             done();

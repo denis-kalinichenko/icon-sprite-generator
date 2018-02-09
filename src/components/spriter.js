@@ -6,7 +6,7 @@ module.exports = () => {
         dest: "",
         shape: {
             id: {
-                generator: name => "icon-" + path.basename(name, '.svg'),
+                generator: name => "icon-" + path.basename(name, ".svg"),
             },
             dimension: {
                 attributes: false,
@@ -14,7 +14,7 @@ module.exports = () => {
         },
         mode: {
             symbol: {
-                dest: '',
+                dest: "",
                 sprite: path.join(__dirname, "sprite"),
                 render: {
                     html: {
