@@ -15,6 +15,7 @@ const matchFiles = rewire("./../src/components/matchFiles");
 const processFiles = require("./../src/components/processFiles");
 const cleaner = require("./../src/components/cleaner");
 const compileSprite = require("./../src/components/spriterCompiler");
+const transform = require("./../src/components/transform");
 const writeOnDisk = rewire("./../src/components/writeOnDisk");
 
 const globMock = require("./mock/globMock");
@@ -45,7 +46,7 @@ describe("Icon Sprite Generator", function () {
             });
         };
 
-        const writeOnDiskMock = (sprite, output) => {
+        const writeOnDiskMock = sprite => {
             return new Promise(resolve => {
                 resolve(sprite);
             });
@@ -63,18 +64,24 @@ describe("Icon Sprite Generator", function () {
             };
         };
 
+        const transformSpy = spy(function (sprite) {
+            return sprite;
+        });
+
         const revertMatchFiles = generator.__set__("matchFiles", matchFilesSpy);
         const revertProcessFiles = generator.__set__("processFiles", processFilesSpy);
         const revertCompileSprite = generator.__set__("compileSprite", compileSpriteSpy);
         const revertWriteOnDisk = generator.__set__("writeOnDisk", writeOnDiskSpy);
         const revertSpriter = generator.__set__("SVGSpriter", spriterMock);
+        const revertTransform = generator.__set__("transform", transformSpy);
 
-        generator("path/to/**.svg", "path/to/output.svg").then(result => {
+        generator({ input: "path/to/**.svg", output: "path/to/output.svg"}).then(result => {
             expect(matchFilesSpy).to.have.been.called.once.with.exactly("path/to/**.svg");
             expect(processFilesSpy).to.have.been.called.once.with.exactly(filesMock);
             expect(spriterAddSpy).to.have.been.called(3);
             expect(compileSpriteSpy).to.have.been.called(1);
             expect(writeOnDiskSpy).to.have.been.called.once.with.exactly("<svg></svg>", "path/to/output.svg");
+            expect(transformSpy).to.have.been.called.once.with.exactly("<svg></svg>", "auto", "path/to/output.svg");
             expect(result).to.equal("<svg></svg>");
 
             done();
@@ -86,6 +93,7 @@ describe("Icon Sprite Generator", function () {
             revertProcessFiles();
             revertSpriter();
             revertCompileSprite();
+            revertTransform();
             revertWriteOnDisk();
         });
     });
@@ -228,6 +236,40 @@ describe("Icon Sprite Generator", function () {
             .then(() => {
                 revertFs();
             });
+        });
+    });
+
+    describe("transform", () => {
+        it("returns wrapped SVG sprite with JavaScript DOM loader", () => {
+            let result = transform(`<svg></svg>`);
+            expect(result).to.equal(`<svg></svg>`);
+
+            result = transform(`<svg></svg>`, "XML");
+            expect(result).to.equal(`<svg></svg>`);
+
+            const expectedResult =
+            `(function() {\n` +
+            `var ready = false;\n`+
+            `var inject = function() {\n`+
+            `if (ready) { return; }\n`+
+            `ready = true;\n`+
+            `var svgHolder = document.createElement("div");\n`+
+            `svgHolder.className += "svg-sprites-holder";\n`+
+            `svgHolder.innerHTML = "<svg></svg>";\n`+
+            `document.body.appendChild(svgHolder);\n`+
+            `};\n`+
+            `if (document.readyState === "complete") { inject(); }\n`+
+            `else { document.addEventListener("DOMContentLoaded", inject); }\n`+
+            `})();`;
+
+            result = transform(`<svg></svg>`, "jsLoader");
+            expect(result).to.equal(expectedResult);
+
+            result = transform(`<svg></svg>`, "auto", "test.js");
+            expect(result).to.equal(expectedResult);
+
+            result = transform(`<svg></svg>`, "auto", "test.svg");
+            expect(result).to.equal(`<svg></svg>`);
         });
     });
 });

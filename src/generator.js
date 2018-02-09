@@ -1,12 +1,19 @@
-const { path } = require("@uix/icons");
+const DEFAULT_ICONS = require("@uix/icons").path;
 
 const matchFiles = require("./components/matchFiles");
 const processFiles = require("./components/processFiles");
 const SVGSpriter = require("./components/spriter");
 const compileSprite = require("./components/spriterCompiler");
+const transform = require("./components/transform");
 const writeOnDisk = require("./components/writeOnDisk");
 
-module.exports = function iconSpriteGenerator(input = path, output = null) {
+module.exports = function iconSpriteGenerator(options = {}) {
+    const {
+        input = DEFAULT_ICONS,
+        output = null,
+        mode = "auto",
+    } = options;
+
     return matchFiles(input)
         .then(processFiles)
         .then(collection => {
@@ -17,5 +24,6 @@ module.exports = function iconSpriteGenerator(input = path, output = null) {
             return spriter;
         })
         .then(compileSprite)
+        .then(sprite => transform(sprite, mode, output))
         .then(sprite => writeOnDisk(sprite, output));
 };
