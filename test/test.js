@@ -3,6 +3,7 @@ const spies = require("chai-spies");
 const chaiAsPromised = require("chai-as-promised");
 const rewire = require("rewire");
 const Vinyl = require("vinyl");
+const path = require("path");
 
 chai.use(chaiAsPromised);
 chai.use(spies);
@@ -14,6 +15,8 @@ const matchFiles = rewire("./../src/components/matchFiles");
 const processFiles = require("./../src/components/processFiles");
 const cleaner = require("./../src/components/cleaner");
 const compileSprite = require("./../src/components/spriterCompiler");
+const transform = require("./../src/components/transform");
+const writeOnDisk = rewire("./../src/components/writeOnDisk");
 
 const globMock = require("./mock/globMock");
 
@@ -43,9 +46,16 @@ describe("Icon Sprite Generator", function () {
             });
         };
 
+        const writeOnDiskMock = sprite => {
+            return new Promise(resolve => {
+                resolve(sprite);
+            });
+        };
+
         const matchFilesSpy = spy(matchFilesMock);
         const processFilesSpy = spy(processFilesMock);
         const compileSpriteSpy = spy(compileSpriteMock);
+        const writeOnDiskSpy = spy(writeOnDiskMock);
         const spriterAddSpy = spy();
 
         const spriterMock = () => {
@@ -54,27 +64,39 @@ describe("Icon Sprite Generator", function () {
             };
         };
 
+        const transformSpy = spy(function (sprite) {
+            return sprite;
+        });
+
         const revertMatchFiles = generator.__set__("matchFiles", matchFilesSpy);
         const revertProcessFiles = generator.__set__("processFiles", processFilesSpy);
         const revertCompileSprite = generator.__set__("compileSprite", compileSpriteSpy);
-        const revertSpriter = generator.__set__("SVGSpriter", spriterMock);
+        const revertWriteOnDisk = generator.__set__("writeOnDisk", writeOnDiskSpy);
+        const revertSpriter = generator.__set__("svgSpriter", spriterMock);
+        const revertTransform = generator.__set__("transform", transformSpy);
 
-        generator("path/to/**.svg").then(result => {
+        generator({ input: "path/to/**.svg", output: "path/to/output.svg"}).then(result => {
             expect(matchFilesSpy).to.have.been.called.once.with.exactly("path/to/**.svg");
             expect(processFilesSpy).to.have.been.called.once.with.exactly(filesMock);
             expect(spriterAddSpy).to.have.been.called(3);
             expect(compileSpriteSpy).to.have.been.called(1);
+            expect(writeOnDiskSpy).to.have.been.called.once.with.exactly("<svg></svg>", "path/to/output.svg");
+            expect(transformSpy).to.have.been.called.once.with.exactly("<svg></svg>", "auto", "path/to/output.svg");
             expect(result).to.equal("<svg></svg>");
 
-            done();
+            return;
         }).catch(error => {
-            done(error);
-        }).then(() => {
+            return error;
+        }).then(result => {
             // rewire resets
             revertMatchFiles();
             revertProcessFiles();
             revertSpriter();
             revertCompileSprite();
+            revertTransform();
+            revertWriteOnDisk();
+
+            done(result);
         });
     });
 
@@ -89,11 +111,12 @@ describe("Icon Sprite Generator", function () {
                     "path/to/calendar.svg",
                     "path/to/cart_check.svg",
                 ]);
-                done();
+                return;
             }).catch(error => {
-                done(error);
-            }).then(() => {
+                return error;
+            }).then(result => {
                 revertGlobby();
+                done(result);
             })
         });
     });
@@ -191,6 +214,66 @@ describe("Icon Sprite Generator", function () {
             }).catch(error => {
                 done(error);
             });
+        });
+    });
+
+    describe("writeOnDisk", () => {
+        it("writes sprite on disk", done => {
+            const fsMock = {
+                writeFile: (p1, p2, p3, callback) => {
+                    expect(p1).to.equal(path.resolve("path/to/output.svg"));
+                    expect(p2).to.equal(`<svg></svg>`);
+                    expect(p3).to.equal("utf8");
+                    callback(null);
+                },
+            };
+
+            const revertFs = writeOnDisk.__set__("fs", fsMock);
+
+            writeOnDisk(`<svg></svg>`, "path/to/output.svg").then(result => {
+                expect(result).to.equal(`<svg></svg>`);
+                return;
+            }).catch(error => {
+                return error;
+            })
+            .then(result => {
+                revertFs();
+                done(result);
+            });
+        });
+    });
+
+    describe("transform", () => {
+        it("returns wrapped SVG sprite with JavaScript DOM loader", () => {
+            let result = transform(`<svg></svg>`);
+            expect(result).to.equal(`<svg></svg>`);
+
+            result = transform(`<svg></svg>`, "XML");
+            expect(result).to.equal(`<svg></svg>`);
+
+            const expectedResult =
+            `(function() {\n` +
+            `var ready = false;\n`+
+            `var inject = function() {\n`+
+            `if (ready) { return; }\n`+
+            `ready = true;\n`+
+            `var svgHolder = document.createElement("div");\n`+
+            `svgHolder.className += "svg-sprites-holder";\n`+
+            `svgHolder.innerHTML = "<svg></svg>";\n`+
+            `document.body.appendChild(svgHolder);\n`+
+            `};\n`+
+            `if (document.readyState === "complete") { inject(); }\n`+
+            `else { document.addEventListener("DOMContentLoaded", inject); }\n`+
+            `})();`;
+
+            result = transform(`<svg></svg>`, "jsLoader");
+            expect(result).to.equal(expectedResult);
+
+            result = transform(`<svg></svg>`, "auto", "test.js");
+            expect(result).to.equal(expectedResult);
+
+            result = transform(`<svg></svg>`, "auto", "test.svg");
+            expect(result).to.equal(`<svg></svg>`);
         });
     });
 });
