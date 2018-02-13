@@ -84,10 +84,10 @@ describe("Icon Sprite Generator", function () {
             expect(transformSpy).to.have.been.called.once.with.exactly("<svg></svg>", "auto", "path/to/output.svg");
             expect(result).to.equal("<svg></svg>");
 
-            done();
+            return;
         }).catch(error => {
-            done(error);
-        }).then(() => {
+            return error;
+        }).then(result => {
             // rewire resets
             revertMatchFiles();
             revertProcessFiles();
@@ -95,6 +95,8 @@ describe("Icon Sprite Generator", function () {
             revertCompileSprite();
             revertTransform();
             revertWriteOnDisk();
+
+            done(result);
         });
     });
 
@@ -109,11 +111,12 @@ describe("Icon Sprite Generator", function () {
                     "path/to/calendar.svg",
                     "path/to/cart_check.svg",
                 ]);
-                done();
+                return;
             }).catch(error => {
-                done(error);
-            }).then(() => {
+                return error;
+            }).then(result => {
                 revertGlobby();
+                done(result);
             })
         });
     });
@@ -229,12 +232,13 @@ describe("Icon Sprite Generator", function () {
 
             writeOnDisk(`<svg></svg>`, "path/to/output.svg").then(result => {
                 expect(result).to.equal(`<svg></svg>`);
-                done();
+                return;
             }).catch(error => {
-                done(error);
+                return error;
             })
-            .then(() => {
+            .then(result => {
                 revertFs();
+                done(result);
             });
         });
     });
