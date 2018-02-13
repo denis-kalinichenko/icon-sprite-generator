@@ -7,7 +7,7 @@ module.exports = (sprite, output = null) => {
     }
 
     return new Promise((resolve, reject) => {
-        fs.writeFile(path.resolve(output), sprite, "utf8", error => {
+        fs.writeFile(path.resolve(output), sprite, "utf8", (error) => {
             if (error) {
                 reject(error);
                 return;

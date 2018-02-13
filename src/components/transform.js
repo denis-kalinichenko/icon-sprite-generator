@@ -1,6 +1,6 @@
 const path = require("path");
 
-module.exports = function (content, mode = "auto", output = null) {
+module.exports = function transform(content, mode = "auto", output = null) {
     let sprite = content;
 
     if (mode === "jsLoader" || (mode === "auto" && output && path.extname(output) === ".js")) {

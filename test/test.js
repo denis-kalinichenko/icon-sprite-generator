@@ -72,7 +72,7 @@ describe("Icon Sprite Generator", function () {
         const revertProcessFiles = generator.__set__("processFiles", processFilesSpy);
         const revertCompileSprite = generator.__set__("compileSprite", compileSpriteSpy);
         const revertWriteOnDisk = generator.__set__("writeOnDisk", writeOnDiskSpy);
-        const revertSpriter = generator.__set__("SVGSpriter", spriterMock);
+        const revertSpriter = generator.__set__("svgSpriter", spriterMock);
         const revertTransform = generator.__set__("transform", transformSpy);
 
         generator({ input: "path/to/**.svg", output: "path/to/output.svg"}).then(result => {

@@ -10,7 +10,7 @@ module.exports = function processFiles(files = []) {
             return;
         }
 
-        const collection = files.map(file => {
+        const collection = files.map((file) => {
             let content = fs.readFileSync(file).toString();
             content = cleaner(content);
 
