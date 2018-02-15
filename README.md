@@ -18,7 +18,7 @@ $ npm install @uix/icon-sprite-generator --save
 
 ## Usage
 
-```js
+```javascript
 const generator = require("@uix/icon-sprite-generator");
 
 /* async/await */
