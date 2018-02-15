@@ -8,6 +8,7 @@
 - Supports glob file matching (patterns based on [globby](https://github.com/sindresorhus/globby))
 - Fully compatible with [@uix/icons](https://stash.code.g2a.com/projects/UIX/repos/icons/browse)
 - Exports sprite on disk
+- Optional wrapping with JavaScript Loader (for browsers)
 
 
 ## Install
