@@ -1,4 +1,4 @@
-# @uix / icon sprite generator
+# icon-sprite-generator
 
 > User-friendly SVG sprite generation 
 
@@ -6,19 +6,20 @@
 
 - Promise API
 - Supports glob file matching (patterns based on [globby](https://github.com/sindresorhus/globby))
+- SVG cleaner built-in (removes unneeded attributes and tags)
 - Exports sprite on disk
 - Optional wrapping with JavaScript Loader (for browsers)
 
 ## Install
 
 ```
-$ npm install @uix/icon-sprite-generator --save
+$ npm install icon-sprite-generator --save
 ```
 
 ## Usage
 
 ```javascript
-const generator = require("@uix/icon-sprite-generator");
+const generator = require("icon-sprite-generator");
 
 /* async/await */
 (async () => {
@@ -50,7 +51,6 @@ Type: `Object`
 ##### input
 
 Type: **[`globby pattern`](https://github.com/sindresorhus/globby)** (`string` `Array`)<br>
-Default: `path` from **[@uix/icons](https://stash.code.g2a.com/projects/UIX/repos/icons/browse)**
 
 Path/s to your directory with icons (supports multiple patterns).
 

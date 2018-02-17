@@ -23,9 +23,9 @@ const globMock = require("./mock/globMock");
 describe("Icon Sprite Generator", function () {
     it("returns a SVG sprite as string", done => {
         const filesMock = [
-            "/Users/g2a/PhpstormProjects/icon-sprite-generator/node_modules/@uix/icons/src/action/cart_check.svg",
-            "/Users/g2a/PhpstormProjects/icon-sprite-generator/node_modules/@uix/icons/src/action/cart.svg",
-            "/Users/g2a/PhpstormProjects/icon-sprite-generator/node_modules/@uix/icons/src/action/contact.svg",
+            "/Users/denis/icons/src/action/cart_check.svg",
+            "/Users/denis/icons/src/action/cart.svg",
+            "/Users/denis/icons/src/action/contact.svg",
         ];
 
         const matchFilesMock = () => {
