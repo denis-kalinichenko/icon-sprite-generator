@@ -1,7 +1,3 @@
 {
-    "extends": [
-        "g2a",
-        "node-g2a",
-        "es6-g2a"
-    ]
+    "extends": "airbnb-base"
 }

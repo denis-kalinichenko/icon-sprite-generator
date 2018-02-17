@@ -6,10 +6,8 @@
 
 - Promise API
 - Supports glob file matching (patterns based on [globby](https://github.com/sindresorhus/globby))
-- Fully compatible with [@uix/icons](https://stash.code.g2a.com/projects/UIX/repos/icons/browse)
 - Exports sprite on disk
 - Optional wrapping with JavaScript Loader (for browsers)
-
 
 ## Install
 
@@ -97,5 +95,8 @@ else { document.addEventListener("DOMContentLoaded", inject); }
 })();
 ```
 
-## Getting Help
-[framework@g2a.com](mailto:framework@g2a.com)
+## Tests
+In order to test this module - run `npm test`
+
+## License
+MIT © [Denis Kalinichenko](https://kalinichenko.me)
